@@ -10,8 +10,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Date;
 
+// Khuất Văn Hải
+// Vũ Trung Nam
+// Vũ Đình Thi
 public class QLMonHocService {
-    public List<MonHoc> getAll() {
+    public List<MonHoc> getAll(int chuyenNganhId) {
         List<MonHoc> list = new ArrayList<MonHoc>();
         try {
             // Bước 1: Load driver
@@ -24,9 +27,11 @@ public class QLMonHocService {
             Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
 
             // Bước 3: Tạp PreparedStatement
-            String query = "SELECT * FROM mon_hoc";
+            String query = "SELECT * FROM mon_hoc WHERE chuyen_nganh_id = ? ";
+
             PreparedStatement ps = conn.prepareStatement(query);
 
+            ps.setInt(1, chuyenNganhId);
             // Bước 4: thực thi truy vấn
             ResultSet rs = ps.executeQuery();
 
@@ -36,9 +41,9 @@ public class QLMonHocService {
                 String tenMH = rs.getString("ten_mon_hoc");
                 String maMH = rs.getString("ma_mon_hoc");
                 Date ngayTao = rs.getDate("ngay_tao");
-                int chuyenNganhId = rs.getInt("chuyen_nganh_id");
+                int cnId = rs.getInt("chuyen_nganh_id");
 
-                MonHoc mh = new MonHoc(id, tenMH, maMH, ngayTao, chuyenNganhId);
+                MonHoc mh = new MonHoc(id, tenMH, maMH, ngayTao, cnId);
                 list.add(mh);
             }
 
@@ -96,6 +101,8 @@ public class QLMonHocService {
     }
 
     public int update(MonHoc monHoc) {
+        String query = "UPDATE mon_hoc SET ten_mon_hoc = ?, ma_mon_hoc = ?, ngay_tao = ?, "
+                + " chuyen_nganh_id = ? WHERE id = ?";
         return 0;
     }
     
